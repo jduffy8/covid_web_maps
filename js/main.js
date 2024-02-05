@@ -33,7 +33,7 @@ map.on('load', () => { //simplifying the function statement: arrow with brackets
                     ]
                 },
                 'circle-color': {
-                    'property': 'mag',
+                    'property': 'cases',
                     'stops': [
                         [grades[0], colors[0]],
                         [grades[1], colors[1]],

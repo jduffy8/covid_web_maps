@@ -195,7 +195,6 @@
                 const state = map.queryRenderedFeatures(point, {
                     layers: ['county_data_layer']
                 });
-                console.log(state)
                 document.getElementById('text-description').innerHTML = state.length ?
                     `<h3>${state[0].properties.county}</h3><p><strong><em>${state[0].properties.rates}</strong> rate of Covid-19</em></p>` :
                     `<p>Hover over a county!</p>`;
