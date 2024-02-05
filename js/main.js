@@ -3,11 +3,10 @@ mapboxgl.accessToken =
 let map = new mapboxgl.Map({
     container: 'map', // container ID
     style: 'mapbox://styles/mapbox/dark-v10',
-    zoom: 5, // starting zoom
-    minZoom: 4, // minimum zoom level of the map
-    center: [138, 38] // starting center
+    zoom: 3, // starting zoom
+    center: [-100, 40] // starting center
 });
-const grades = [4, 5, 6],
+const grades = [100, 1000, 10000],
     colors = ['rgb(208,209,230)', 'rgb(103,169,207)', 'rgb(1,108,89)'],
     radii = [5, 15, 20];
 //load data to the map as new layers.
@@ -15,18 +14,18 @@ const grades = [4, 5, 6],
 map.on('load', () => { //simplifying the function statement: arrow with brackets to define a function
     // when loading a geojson, there are two steps
     // add a source of the data and then add the layer out of the source
-    map.addSource('earthquakes', {
+    map.addSource('cases', {
         type: 'geojson',
-        data: 'assets/earthquakes.geojson'
+        data: 'assets/us-covid-counts.json'
     });
     map.addLayer({
             'id': 'earthquakes-point',
             'type': 'circle',
-            'source': 'earthquakes',
+            'source': 'cases',
             'paint': {
                 // increase the radii of the circle as the zoom level and dbh value increases
                 'circle-radius': {
-                    'property': 'mag',
+                    'property': 'cases',
                     'stops': [
                         [grades[0], radii[0]],
                         [grades[1], radii[1]],
@@ -51,14 +50,14 @@ map.on('load', () => { //simplifying the function statement: arrow with brackets
     map.on('click', 'earthquakes-point', (event) => {
         new mapboxgl.Popup()
             .setLngLat(event.features[0].geometry.coordinates)
-            .setHTML(`<strong>Magnitude:</strong> ${event.features[0].properties.mag}`)
+            .setHTML(`<strong>Amount of Cases:</strong> ${event.features[0].properties.cases}`)
             .addTo(map);
     });
 });
 // create legend
 const legend = document.getElementById('legend');
 //set up legend grades and labels
-var labels = ['<strong>Magnitude</strong>'],
+var labels = ['<strong>Amount of Cases:</strong>'],
     vbreak;
 //iterate through grades and create a scaled circle and label for each
 for (var i = 0; i < grades.length; i++) {
@@ -73,5 +72,5 @@ for (var i = 0; i < grades.length; i++) {
         '</span></p>');
 }
 const source =
-    '<p style="text-align: right; font-size:10pt">Source: <a href="https://earthquake.usgs.gov/earthquakes/">USGS</a></p>';
+    '<p style="text-align: right; font-size:10pt">Source: <a href="https://github.com/nytimes/covid-19-data/blob/43d32dde2f87bd4dafbb7d23f5d9e878124018b8/live/us-counties.csv">N.Y. Times</a></p>';
 legend.innerHTML = labels.join('') + source;
